@@ -1,9 +1,10 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PhishGuard AI | Security Dashboard</title>
+<title>PhishGuard AI | URL Security</title>
 
 <style>
 * { box-sizing: border-box; }
@@ -30,15 +31,11 @@ header {
 }
 
 .logo span { color: white; }
-
-.status {
-    color: #42d9bd;
-    font-size: 13px;
-}
+.status { color: #42d9bd; font-size: 13px; }
 
 main {
-    max-width: 1050px;
-    margin: 45px auto;
+    max-width: 850px;
+    margin: 55px auto;
     padding: 20px;
 }
 
@@ -47,17 +44,9 @@ main {
     margin-bottom: 35px;
 }
 
-.hero h1 {
-    font-size: 38px;
-    margin-bottom: 12px;
-}
-
+.hero h1 { font-size: 36px; }
 .hero h1 span { color: #42d9bd; }
-
-.hero p, .muted {
-    color: #9fb1c8;
-    line-height: 1.7;
-}
+.hero p { color: #9fb1c8; line-height: 1.6; }
 
 .panel {
     background: #111e30;
@@ -73,7 +62,7 @@ label {
     font-weight: bold;
 }
 
-input {
+input, select {
     width: 100%;
     padding: 16px;
     border-radius: 9px;
@@ -81,12 +70,13 @@ input {
     background: #091525;
     color: white;
     font-size: 15px;
+    margin-bottom: 18px;
 }
 
 button {
     width: 100%;
     padding: 16px;
-    margin-top: 16px;
+    margin-top: 10px;
     border: 0;
     border-radius: 9px;
     background: #22c9ae;
@@ -102,82 +92,36 @@ button:disabled { opacity: .6; cursor: wait; }
 .result {
     display: none;
     margin-top: 25px;
-}
-
-.result-card {
+    padding: 22px;
+    border-radius: 12px;
     background: #091525;
     border: 1px solid #38516e;
-    border-radius: 12px;
-    padding: 22px;
-    margin-top: 18px;
 }
 
-.prediction {
-    font-size: 23px;
-    font-weight: bold;
-}
-
+.result h2 { margin-top: 0; }
 .safe { color: #42d9bd; }
 .danger { color: #ff6577; }
-.warning { color: #ffc66d; }
+.muted { color: #9fb1c8; }
 
-.metrics {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 15px;
-    margin-top: 20px;
+.analysis {
+    margin-top: 25px;
+    padding-top: 15px;
+    border-top: 1px solid #38516e;
 }
 
-.metric {
-    background: #111e30;
-    border: 1px solid #263b55;
-    border-radius: 12px;
-    padding: 18px;
+.analysis h3 { color: #42d9bd; }
+.analysis h4 { margin-bottom: 8px; }
+
+.analysis li {
+    color: #c5d3e5;
+    margin-bottom: 9px;
+    line-height: 1.5;
 }
 
-.metric h3 {
-    color: #9fb1c8;
-    font-size: 14px;
-    margin: 0 0 12px;
-}
-
-.metric strong {
-    font-size: 25px;
-}
-
-.progress-bg {
-    background: #263b55;
-    height: 10px;
-    border-radius: 10px;
-    overflow: hidden;
-    margin-top: 15px;
-}
-
-.progress {
-    height: 100%;
-    width: 0%;
-    background: #42d9bd;
-    transition: width .5s;
-}
-
-ul {
-    padding-left: 22px;
-    line-height: 1.9;
-    color: #d4e1f2;
-}
-
-li { margin-bottom: 5px; }
-
-.section-title {
+.risk-score {
+    font-size: 22px;
+    font-weight: bold;
     color: #42d9bd;
-    margin-bottom: 10px;
-}
-
-.note {
-    font-size: 12px;
-    color: #91a4bd;
-    line-height: 1.6;
-    margin-top: 15px;
 }
 
 footer {
@@ -188,11 +132,9 @@ footer {
 }
 
 @media(max-width:600px) {
-    .hero h1 { font-size: 29px; }
+    .hero h1 { font-size: 28px; }
     main { margin: 25px auto; }
-    .metrics { grid-template-columns: 1fr; }
     header { padding: 18px 5%; }
-    .logo { font-size: 21px; }
 }
 </style>
 </head>
@@ -206,97 +148,81 @@ footer {
 
 <main>
 
-<section class="hero">
-    <h1>Intelligent <span>Phishing URL</span> Detection</h1>
-    <p>
-        Protect yourself from malicious websites using Deep Learning
-        and Explainable AI.<br>
-        Analyze suspicious URLs and understand potential security risks.
-    </p>
-</section>
+    <section class="hero">
+        <h1>Intelligent <span>Phishing URL</span> Detection</h1>
+        <p>
+            Protect yourself from malicious websites using Deep Learning
+            and Explainable AI.<br>
+            Analyze suspicious URLs and understand potential security risks.
+        </p>
+    </section>
 
-<section class="panel">
+    <section class="panel">
 
-    <label for="url">Enter Website URL</label>
+        <label for="url">Enter Website URL</label>
+        <input
+            id="url"
+            type="text"
+            placeholder="https://example.com"
+        >
 
-    <input
-        id="url"
-        type="text"
-        placeholder="https://example.com"
-        maxlength="2048"
-    >
+        <label for="model">Select Deep Learning Model</label>
+        <select id="model">
+            <option value="hybrid">Hybrid CNN-BiLSTM</option>
+            <option value="cnn">CNN</option>
+            <option value="bilstm">BiLSTM</option>
+        </select>
 
-    <p class="muted">
-        Active model: Hybrid CNN-BiLSTM
-    </p>
+        <button id="scan" onclick="scanURL()">
+            🔍 Scan Website
+        </button>
 
-    <button id="scan" onclick="scanURL()">
-        🔍 Scan Website
-    </button>
+        <!-- Prediction Results -->
+        <div class="result" id="result">
 
-    <div class="result" id="result">
-
-        <div class="result-card">
-            <h2 id="prediction" class="prediction"></h2>
+            <h2 id="prediction"></h2>
             <p id="confidence"></p>
-            <p id="details" class="muted"></p>
-        </div>
+            <p class="muted" id="details"></p>
 
-        <div class="metrics">
+            <!-- Explainable AI Section -->
+            <div class="analysis">
 
-            <div class="metric">
-                <h3>URL HEURISTIC RISK SCORE</h3>
-                <strong id="riskScore">0/100</strong>
-                <div class="progress-bg">
-                    <div class="progress" id="riskProgress"></div>
-                </div>
+                <hr>
+
+                <h3>🔍 Explainable AI Analysis</h3>
+
+                <p class="risk-score" id="riskScore"></p>
+                <p id="riskLevel"></p>
+
+                <h4>⚠ Suspicious Indicators</h4>
+                <ul id="indicators"></ul>
+
+                <h4>🛡 Safety Recommendations</h4>
+                <ul id="recommendations"></ul>
+
             </div>
-
-            <div class="metric">
-                <h3>HEURISTIC RISK LEVEL</h3>
-                <strong id="riskLevel">-</strong>
-                <p class="muted" id="riskDescription"></p>
-            </div>
-
         </div>
 
-        <div class="result-card">
-            <h3 class="section-title">🔎 Suspicious URL Indicators</h3>
-            <ul id="indicators"></ul>
-        </div>
+    </section>
 
-        <div class="result-card">
-            <h3 class="section-title">🛡 Safety Recommendations</h3>
-            <ul id="recommendations"></ul>
-        </div>
+    <section class="panel">
+        <h2>About PhishGuard AI</h2>
 
-        <p class="note">
-            Note: The Deep Learning model prediction and heuristic URL
-            risk score are separate assessments. The heuristic indicators
-            are not direct explanations of the model's internal decision.
-            A low score does not guarantee that a website is safe.
+        <p class="muted">
+            PhishGuard AI uses character-level deep learning
+            architectures to identify suspicious URL patterns and
+            classify URLs as legitimate or phishing.
         </p>
 
-    </div>
+        <p class="muted">
+            Deep Learning: Hybrid CNN-BiLSTM
+        </p>
 
-</section>
-
-<section class="panel">
-    <h2>About PhishGuard AI</h2>
-    <p class="muted">
-        PhishGuard AI uses character-level deep learning to classify
-        website URLs as legitimate or phishing.
-    </p>
-
-    <p class="muted">
-        Deep Learning: Hybrid CNN-BiLSTM
-    </p>
-
-    <p class="muted">
-        Explainable AI: URL feature analysis, suspicious indicators,
-        heuristic risk scoring and safety recommendations.
-    </p>
-</section>
+        <p class="muted">
+            Explainable AI: URL feature analysis, suspicious indicators,
+            heuristic risk scoring and safety recommendations.
+        </p>
+    </section>
 
 </main>
 
@@ -306,26 +232,11 @@ footer {
 
 <script>
 
-function addListItems(elementId, items) {
-    const list = document.getElementById(elementId);
-    list.replaceChildren();
-
-    (Array.isArray(items) ? items : []).forEach(item => {
-        const li = document.createElement("li");
-        li.textContent = String(item);
-        list.appendChild(li);
-    });
-
-    if (!list.children.length) {
-        const li = document.createElement("li");
-        li.textContent = "No information available.";
-        list.appendChild(li);
-    }
-}
-
 async function scanURL() {
 
     const url = document.getElementById("url").value.trim();
+    const model = document.getElementById("model").value;
+
     const button = document.getElementById("scan");
     const result = document.getElementById("result");
 
@@ -345,7 +256,10 @@ async function scanURL() {
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({url: url})
+            body: JSON.stringify({
+                url: url,
+                model: model
+            })
         });
 
         const data = await response.json();
@@ -354,61 +268,52 @@ async function scanURL() {
             throw new Error(data.error || "Prediction failed");
         }
 
+        // Deep Learning Prediction
         const phishing = String(data.prediction)
-            .toLowerCase().includes("phish");
+            .toLowerCase()
+            .includes("phish");
 
-        const predictionElement =
-            document.getElementById("prediction");
-
-        predictionElement.textContent = phishing
+        document.getElementById("prediction").textContent =
+            phishing
             ? "⚠ PHISHING URL DETECTED"
             : "✓ LEGITIMATE URL";
 
-        predictionElement.className = phishing
-            ? "prediction danger"
-            : "prediction safe";
+        document.getElementById("prediction").className =
+            phishing ? "danger" : "safe";
 
         document.getElementById("confidence").textContent =
             "Model Confidence: " +
             Number(data.confidence).toFixed(2) + "%";
 
         document.getElementById("details").textContent =
-            "Model: " + (data.model || "Hybrid CNN-BiLSTM");
+            "Model: " + (data.model || model.toUpperCase());
 
+        // Explainable AI Results
         const explanation = data.explanation || {};
 
-        const score = Math.max(
-            0,
-            Math.min(100, Number(explanation.risk_score) || 0)
-        );
-
-        const level = explanation.risk_level || "Unknown";
-
         document.getElementById("riskScore").textContent =
-            score + "/100";
+            "Risk Score: " +
+            (explanation.risk_score ?? "N/A") + "/100";
 
-        document.getElementById("riskLevel").textContent = level;
+        document.getElementById("riskLevel").textContent =
+            "Risk Level: " +
+            (explanation.risk_level || "N/A");
 
-        const riskElement = document.getElementById("riskLevel");
+        // Display lists safely
+        function fillList(id, items) {
 
-        riskElement.className =
-            level === "High" ? "danger" :
-            level === "Medium" ? "warning" : "safe";
+            const list = document.getElementById(id);
+            list.replaceChildren();
 
-        document.getElementById("riskDescription").textContent =
-            level === "High" ? "Many suspicious indicators detected." :
-            level === "Medium" ? "Some suspicious indicators detected." :
-            "Few or no major indicators detected.";
+            (items || []).forEach(item => {
+                const li = document.createElement("li");
+                li.textContent = item;
+                list.appendChild(li);
+            });
+        }
 
-        const progress = document.getElementById("riskProgress");
-        progress.style.width = score + "%";
-
-        progress.style.background =
-            level === "High" ? "#ff6577" :
-            level === "Medium" ? "#ffc66d" : "#42d9bd";
-
-        addListItems("indicators", explanation.indicators);
-        addListItems("recommendations", explanation.recommendations);
+        fillList("indicators", explanation.indicators);
+        fillList("recommendations", explanation.recommendations);
 
         result.style.display = "block";
 
@@ -419,22 +324,13 @@ async function scanURL() {
         document.getElementById("prediction").textContent =
             "Unable to scan URL";
 
-        document.getElementById("prediction").className =
-            "prediction danger";
+        document.getElementById("prediction").className = "danger";
 
         document.getElementById("confidence").textContent =
             error.message;
 
         document.getElementById("details").textContent =
-            "Check that the Flask backend is running.";
-
-        document.getElementById("riskScore").textContent = "-";
-        document.getElementById("riskLevel").textContent = "-";
-        document.getElementById("riskDescription").textContent = "";
-        document.getElementById("riskProgress").style.width = "0%";
-
-        addListItems("indicators", []);
-        addListItems("recommendations", []);
+            "Please try again.";
 
     } finally {
 
@@ -443,10 +339,6 @@ async function scanURL() {
 
     }
 }
-
-document.getElementById("url").addEventListener("keydown", event => {
-    if (event.key === "Enter") scanURL();
-});
 
 </script>
 
