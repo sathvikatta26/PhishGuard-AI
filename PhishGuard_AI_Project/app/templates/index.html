@@ -1,0 +1,346 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PhishGuard AI | URL Security</title>
+
+<style>
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #08111f;
+    color: #eaf2ff;
+}
+
+header {
+    padding: 22px 7%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #20334c;
+}
+
+.logo {
+    font-size: 25px;
+    font-weight: bold;
+    color: #42d9bd;
+}
+
+.logo span { color: white; }
+.status { color: #42d9bd; font-size: 13px; }
+
+main {
+    max-width: 850px;
+    margin: 55px auto;
+    padding: 20px;
+}
+
+.hero {
+    text-align: center;
+    margin-bottom: 35px;
+}
+
+.hero h1 { font-size: 36px; }
+.hero h1 span { color: #42d9bd; }
+.hero p { color: #9fb1c8; line-height: 1.6; }
+
+.panel {
+    background: #111e30;
+    border: 1px solid #263b55;
+    border-radius: 18px;
+    padding: 28px;
+    margin-bottom: 22px;
+}
+
+label {
+    display: block;
+    margin-bottom: 12px;
+    font-weight: bold;
+}
+
+input, select {
+    width: 100%;
+    padding: 16px;
+    border-radius: 9px;
+    border: 1px solid #38516e;
+    background: #091525;
+    color: white;
+    font-size: 15px;
+    margin-bottom: 18px;
+}
+
+button {
+    width: 100%;
+    padding: 16px;
+    margin-top: 10px;
+    border: 0;
+    border-radius: 9px;
+    background: #22c9ae;
+    color: #06141c;
+    font-weight: bold;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+button:hover { background: #49e4c9; }
+button:disabled { opacity: .6; cursor: wait; }
+
+.result {
+    display: none;
+    margin-top: 25px;
+    padding: 22px;
+    border-radius: 12px;
+    background: #091525;
+    border: 1px solid #38516e;
+}
+
+.result h2 { margin-top: 0; }
+.safe { color: #42d9bd; }
+.danger { color: #ff6577; }
+.muted { color: #9fb1c8; }
+
+.analysis {
+    margin-top: 25px;
+    padding-top: 15px;
+    border-top: 1px solid #38516e;
+}
+
+.analysis h3 { color: #42d9bd; }
+.analysis h4 { margin-bottom: 8px; }
+
+.analysis li {
+    color: #c5d3e5;
+    margin-bottom: 9px;
+    line-height: 1.5;
+}
+
+.risk-score {
+    font-size: 22px;
+    font-weight: bold;
+    color: #42d9bd;
+}
+
+footer {
+    text-align: center;
+    color: #71849d;
+    padding: 25px;
+    font-size: 13px;
+}
+
+@media(max-width:600px) {
+    .hero h1 { font-size: 28px; }
+    main { margin: 25px auto; }
+    header { padding: 18px 5%; }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <div class="logo">🛡 PhishGuard <span>AI</span></div>
+    <div class="status">● AI SECURITY SYSTEM</div>
+</header>
+
+<main>
+
+    <section class="hero">
+        <h1>Intelligent <span>Phishing URL</span> Detection</h1>
+        <p>
+            Protect yourself from malicious websites using Deep Learning
+            and Explainable AI.<br>
+            Analyze suspicious URLs and understand potential security risks.
+        </p>
+    </section>
+
+    <section class="panel">
+
+        <label for="url">Enter Website URL</label>
+        <input
+            id="url"
+            type="text"
+            placeholder="https://example.com"
+        >
+
+        <label for="model">Select Deep Learning Model</label>
+        <select id="model">
+            <option value="hybrid">Hybrid CNN-BiLSTM</option>
+            <option value="cnn">CNN</option>
+            <option value="bilstm">BiLSTM</option>
+        </select>
+
+        <button id="scan" onclick="scanURL()">
+            🔍 Scan Website
+        </button>
+
+        <!-- Prediction Results -->
+        <div class="result" id="result">
+
+            <h2 id="prediction"></h2>
+            <p id="confidence"></p>
+            <p class="muted" id="details"></p>
+
+            <!-- Explainable AI Section -->
+            <div class="analysis">
+
+                <hr>
+
+                <h3>🔍 Explainable AI Analysis</h3>
+
+                <p class="risk-score" id="riskScore"></p>
+                <p id="riskLevel"></p>
+
+                <h4>⚠ Suspicious Indicators</h4>
+                <ul id="indicators"></ul>
+
+                <h4>🛡 Safety Recommendations</h4>
+                <ul id="recommendations"></ul>
+
+            </div>
+        </div>
+
+    </section>
+
+    <section class="panel">
+        <h2>About PhishGuard AI</h2>
+
+        <p class="muted">
+            PhishGuard AI uses character-level deep learning
+            architectures to identify suspicious URL patterns and
+            classify URLs as legitimate or phishing.
+        </p>
+
+        <p class="muted">
+            Deep Learning: Hybrid CNN-BiLSTM
+        </p>
+
+        <p class="muted">
+            Explainable AI: URL feature analysis, suspicious indicators,
+            heuristic risk scoring and safety recommendations.
+        </p>
+    </section>
+
+</main>
+
+<footer>
+    PhishGuard AI | Deep Learning Cybersecurity Project
+</footer>
+
+<script>
+
+async function scanURL() {
+
+    const url = document.getElementById("url").value.trim();
+    const model = document.getElementById("model").value;
+
+    const button = document.getElementById("scan");
+    const result = document.getElementById("result");
+
+    if (!url) {
+        alert("Please enter a URL.");
+        return;
+    }
+
+    button.disabled = true;
+    button.textContent = "Analyzing URL...";
+    result.style.display = "none";
+
+    try {
+
+        const response = await fetch("/predict", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                url: url,
+                model: model
+            })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.error || "Prediction failed");
+        }
+
+        // Deep Learning Prediction
+        const phishing = String(data.prediction)
+            .toLowerCase()
+            .includes("phish");
+
+        document.getElementById("prediction").textContent =
+            phishing
+            ? "⚠ PHISHING URL DETECTED"
+            : "✓ LEGITIMATE URL";
+
+        document.getElementById("prediction").className =
+            phishing ? "danger" : "safe";
+
+        document.getElementById("confidence").textContent =
+            "Model Confidence: " +
+            Number(data.confidence).toFixed(2) + "%";
+
+        document.getElementById("details").textContent =
+            "Model: " + (data.model || model.toUpperCase());
+
+        // Explainable AI Results
+        const explanation = data.explanation || {};
+
+        document.getElementById("riskScore").textContent =
+            "Risk Score: " +
+            (explanation.risk_score ?? "N/A") + "/100";
+
+        document.getElementById("riskLevel").textContent =
+            "Risk Level: " +
+            (explanation.risk_level || "N/A");
+
+        // Display lists safely
+        function fillList(id, items) {
+
+            const list = document.getElementById(id);
+            list.replaceChildren();
+
+            (items || []).forEach(item => {
+                const li = document.createElement("li");
+                li.textContent = item;
+                list.appendChild(li);
+            });
+        }
+
+        fillList("indicators", explanation.indicators);
+        fillList("recommendations", explanation.recommendations);
+
+        result.style.display = "block";
+
+    } catch (error) {
+
+        result.style.display = "block";
+
+        document.getElementById("prediction").textContent =
+            "Unable to scan URL";
+
+        document.getElementById("prediction").className = "danger";
+
+        document.getElementById("confidence").textContent =
+            error.message;
+
+        document.getElementById("details").textContent =
+            "Please try again.";
+
+    } finally {
+
+        button.disabled = false;
+        button.textContent = "🔍 Scan Website";
+
+    }
+}
+
+</script>
+
+</body>
+</html>
